@@ -1,7 +1,7 @@
 <html>
 <head>
 	<title>Hello, World!</title>
-
+	<link rel="stylesheet" href="styles/main.css">
 	<!-- Sets the basepath for the library if not in same directory -->
 	<script type="text/javascript">
 		mxBasePath = 'javascript/src';
@@ -15,8 +15,51 @@
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
 		// from the onLoad event handler of the document (see below).
-		function main(container)
-		{
+		function main(container) {
+
+			function CollateShape()
+			{
+				mxEllipse.call(this);
+			};
+			mxUtils.extend(CollateShape, mxEllipse);
+			CollateShape.prototype.paintVertexShape = function(c, x, y, w, h)
+			{
+				c.begin();
+				c.moveTo(x, y);
+				c.lineTo(x, y + h);
+				c.lineTo(x + w / 2, y + h / 2);
+				c.close();
+				c.fillAndStroke();
+				
+				c.begin();
+				c.moveTo(x + w, y);
+				c.lineTo(x + w, y + h);
+				c.lineTo(x + w / 2, y + h / 2);
+				c.close();
+				c.fillAndStroke();
+			};
+			mxCellRenderer.registerShape('collate', CollateShape);
+
+			function MagnitudeShape()
+			{
+				mxEllipse.call(this);
+			};
+			mxUtils.extend(MagnitudeShape, mxEllipse);
+			MagnitudeShape.prototype.paintVertexShape = function(c, x, y, w, h)
+			{
+				c.begin();
+				c.moveTo(x, y);
+				c.lineTo(x, y + h);
+				c.lineTo(x + (w / 2), y + (h * 0.6));
+				c.lineTo(x + w, y + h);
+				c.lineTo(x + w, y);
+				c.lineTo(x + (w / 2), y + (h * 0.4));
+				c.lineTo(x, y);
+				c.fillAndStroke();
+			};
+
+			mxCellRenderer.registerShape('magnitude', MagnitudeShape);
+
 			// Checks if the browser is supported
 			if (!mxClient.isBrowserSupported())
 			{
@@ -25,26 +68,101 @@
 			}
 			else
 			{
+				// Defines an icon for creating new connections in the connection handler.
+				// This will automatically disable the highlighting of the source vertex.
+				mxConnectionHandler.prototype.connectImage = new mxImage('javascript/src/images/connector.gif', 16, 16);
+
+				// Gets div-element of the toolbar
+				var toolbarContainer = document.getElementById('toolbarContainer');
+				// Creates new toolbar without event processing
+				var toolbar = new mxToolbar(toolbarContainer);
+				toolbar.enabled = false;
+
+				// Workaround for Internet Explorer ignoring certain styles
+				if (mxClient.IS_QUIRKS) {
+					document.body.style.overflow = 'hidden';
+					new mxDivResizer(toolbarContainer);
+					new mxDivResizer(container);
+				}
+
 				// Disables the built-in context menu
 				mxEvent.disableContextMenu(container);
 				
-				// Creates the graph inside the given container
-				var graph = new mxGraph(container);
+				// Creates the model and the graph inside the container
+				// using the fastest rendering available on the browser
+				var model = new mxGraphModel();
+				var graph = new mxGraph(container, model);
 
+				// Enables new connections in the graph
+				graph.setConnectable(true);
+				graph.setMultigraph(false);
+
+				// Stops editing on enter or escape keypress
+				var keyHandler = new mxKeyHandler(graph);
 				// Enables rubberband selection
-				new mxRubberband(graph);
+				var rubberband = new mxRubberband(graph);
+
+				var addVertex = function(icon, w, h, style)
+				{
+					var vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+					vertex.setVertex(true);
+				
+					var img = addToolbarItem(graph, toolbar, vertex, icon);
+					img.enabled = true;
+					
+					graph.getSelectionModel().addListener(mxEvent.CHANGE, function()
+					{
+						var tmp = graph.isSelectionEmpty();
+						mxUtils.setOpacity(img, (tmp) ? 100 : 20);
+						img.enabled = tmp;
+					});
+				};
+				
+				addVertex('javascript/src/images/shapes/rectangle2.gif', 100, 40, 'shape=rectangle');
+				addVertex('javascript/src/images/shapes/rounded2.gif', 100, 50, 'shape=rounded');
+				addVertex('javascript/src/images/shapes/ellipse2.gif', 50, 50, 'shape=ellipse');
+				addVertex('javascript/src/images/shapes/rhombus2.gif', 50, 50, 'shape=rhombus');
+				addVertex('javascript/src/images/shapes/triangle2.gif', 50, 50, 'shape=triangle');
+				addVertex('javascript/src/images/shapes/magnitude.gif', 100, 40, 'shape=magnitude');
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
 				var parent = graph.getDefaultParent();
+
+				// Creates the default style for vertices
+				var style = [];
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
+				style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
+				style[mxConstants.STYLE_STROKECOLOR] = 'gray';
+				style[mxConstants.STYLE_ROUNDED] = true;
+				style[mxConstants.STYLE_FILLCOLOR] = '#EEEEEE';
+				style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
+				style[mxConstants.STYLE_FONTCOLOR] = '#774400';
+				style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+				style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+				style[mxConstants.STYLE_FONTSIZE] = '12';
+				style[mxConstants.STYLE_FONTSTYLE] = 1;
+				graph.getStylesheet().putDefaultVertexStyle(style);
+		
+				// Creates the default style for edges
+				style = [];
+				style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
+				style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
+				style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+				style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+				style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+				style[mxConstants.STYLE_FONTSIZE] = '10';
+				graph.getStylesheet().putDefaultEdgeStyle(style);
 								
 				// Adds cells to the model in a single step
 				graph.getModel().beginUpdate();
-				try
-				{
+				try {
+					/*
 					var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
 					var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-                    var e1 = graph.insertEdge(parent, null, '', v1, v2);
+					var e1 = graph.insertEdge(parent, null, '', v1, v2);
+					*/
                 }
 				finally
 				{
@@ -52,16 +170,61 @@
 					graph.getModel().endUpdate();
 				}
 			}
+
+			function addToolbarItem(graph, toolbar, prototype, image) {
+				// Function that is executed when the image is dropped on
+				// the graph. The cell argument points to the cell under
+				// the mousepointer if there is one.
+				var funct = function(graph, evt, cell, x, y)
+				{
+					graph.stopEditing(false);
+
+					var vertex = graph.getModel().cloneCell(prototype);
+					vertex.geometry.x = x;
+					vertex.geometry.y = y;
+						
+					graph.addCell(vertex);
+					graph.setSelectionCell(vertex);
+				}
+				
+				// Creates the image which is used as the drag icon (preview)
+				var img = toolbar.addMode(null, image, function(evt, cell)
+				{
+					var pt = this.graph.getPointForEvent(evt);
+					funct(graph, evt, cell, pt.x, pt.y);
+				});
+				
+				// Disables dragging if element is disabled. This is a workaround
+				// for wrong event order in IE. Following is a dummy listener that
+				// is invoked as the last listener in IE.
+				mxEvent.addListener(img, 'mousedown', function(evt)
+				{
+					// do nothing
+				});
+				
+				// This listener is always called first before any other listener
+				// in all browsers.
+				mxEvent.addListener(img, 'mousedown', function(evt)
+				{
+					if (img.enabled == false)
+					{
+						mxEvent.consume(evt);
+					}
+				});
+							
+				mxUtils.makeDraggable(img, graph, funct);
+				
+				return img;
+			}
 		};
 	</script>
 </head>
 
 <!-- Page passes the container for the graph to the program -->
 <body onload="main(document.getElementById('graphContainer'))">
-
+	<!-- Container for the toolbar containing the dragable elements -->
+	<div id="toolbarContainer"></div>
 	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"
-		style="position:relative;overflow:hidden;width:321px;height:241px;background:url('javascript/src/images/grid.gif');cursor:default;">
-	</div>
+	<div id="graphContainer"></div>
 </body>
 </html>
