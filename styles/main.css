@@ -4,7 +4,7 @@ html, body {
 }
 
 #toolbarContainer {
-    border: 3px solid black;
+    border: 2px solid black;
     position: absolute;
     overflow: hidden;
     width: 68px;
@@ -19,12 +19,54 @@ img.mxToolbarMode {
 }
 
 #graphContainer {
-    border: 3px solid black;
+    border: 2px solid black;
     position: relative;
-    margin-left: 75px;
+    margin-left: 74px;
     overflow: hidden;
-    width: 800px;
-    height: 600px;
-    background: url('../javascript/src/images/grid.gif');
+    width: 1200px;
+    height: 860px;
     cursor: default;
+}
+
+.grid {
+    background: url('../javascript/src/images/grid.gif');
+}
+
+.button-undo, 
+.button-redo {
+    padding: 12px 20px;
+    margin: 15px 5px;
+    border: none;
+    box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.5);
+    background: #516efc;
+    text-decoration: none;
+    color: white;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: background-color .3s ease;
+    overflow: hidden;
+}
+
+.button-undo:hover,
+.button-redo:hover {
+    background: #3348ad;
+}
+
+.button-undo:active,
+.button-redo:active {
+    background: #212533;
+}
+
+.button-undo:hover,
+.button-redo:hover,
+.button-undo:active,
+.button-redo:active,
+.button-undo:focus,
+.button-redo:focus {
+    border: none;
+    outline: none;
+}
+
+.button-undo {
+    margin-left: 100px;
 }

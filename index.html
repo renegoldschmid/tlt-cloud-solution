@@ -10,68 +10,91 @@
 	<!-- Loads and initializes the library -->
 	<script type="text/javascript" src="javascript/src/js/mxClient.js"></script>
 
-	<!-- Example code -->
 	<script type="text/javascript">
+		function toggleGrid(element) {
+			element.classList.toggle("grid");
+		}
+	</script>
+
+	<!-- App Code -->
+	<script type="text/javascript">
+
+		/**
+		* Create and register Magnitude Shape
+		*/
+		function MagnitudeShape() {
+			mxEllipse.call(this);
+		};
+		mxUtils.extend(MagnitudeShape, mxEllipse);
+		MagnitudeShape.prototype.paintVertexShape = function(c, x, y, w, h) {
+			c.begin();
+			c.moveTo(x, y);
+			c.lineTo(x, y + h);
+			c.lineTo(x + (w / 2), y + (h * 0.65));
+			c.lineTo(x + w, y + h);
+			c.lineTo(x + w, y);
+			c.lineTo(x + (w / 2), y + (h * 0.35));
+			c.lineTo(x, y);
+			c.fillAndStroke();
+		};
+		mxCellRenderer.registerShape('magnitude', MagnitudeShape);
+
+		// Overridden to define per-shape connection points
+		mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+			if (terminal != null && terminal.shape != null) {
+				if (terminal.shape.stencil != null) {
+					if (terminal.shape.stencil.constraints != null) {
+						return terminal.shape.stencil.constraints;
+					}
+				} else if (terminal.shape.constraints != null) {
+					return terminal.shape.constraints;
+				}
+			}
+			return null;
+		};
+	
+		// Defines the default constraints for all shapes
+		mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
+										 new mxConnectionConstraint(new mxPoint(0.5, 0), true),
+										 new mxConnectionConstraint(new mxPoint(0.75, 0), true),
+		        	              		 new mxConnectionConstraint(new mxPoint(0, 0.25), true),
+		        	              		 new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+		        	              		 new mxConnectionConstraint(new mxPoint(0, 0.75), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(1, 0.25), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(1, 0.5), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(1, 0.75), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.25, 1), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.5, 1), true),
+		        	            		 new mxConnectionConstraint(new mxPoint(0.75, 1), true)];
+		
+		// Edges have no connection points
+		mxPolyline.prototype.constraints = null;
+
+		// Defines the default constraints for all shapes
+		MagnitudeShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0, 0), true),
+												new mxConnectionConstraint(new mxPoint(0.5, 0.3), false),
+												new mxConnectionConstraint(new mxPoint(1, 0), true),
+												new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+												new mxConnectionConstraint(new mxPoint(1, 0.5), true),
+												new mxConnectionConstraint(new mxPoint(0, 1), true),
+												new mxConnectionConstraint(new mxPoint(0.5, 0.7), false),
+												new mxConnectionConstraint(new mxPoint(1, 1), true)];
+
+
 		// Program starts here. Creates a sample graph in the
 		// DOM node with the specified ID. This function is invoked
 		// from the onLoad event handler of the document (see below).
 		function main(container) {
-
-			function CollateShape()
-			{
-				mxEllipse.call(this);
-			};
-			mxUtils.extend(CollateShape, mxEllipse);
-			CollateShape.prototype.paintVertexShape = function(c, x, y, w, h)
-			{
-				c.begin();
-				c.moveTo(x, y);
-				c.lineTo(x, y + h);
-				c.lineTo(x + w / 2, y + h / 2);
-				c.close();
-				c.fillAndStroke();
-				
-				c.begin();
-				c.moveTo(x + w, y);
-				c.lineTo(x + w, y + h);
-				c.lineTo(x + w / 2, y + h / 2);
-				c.close();
-				c.fillAndStroke();
-			};
-			mxCellRenderer.registerShape('collate', CollateShape);
-
-			function MagnitudeShape()
-			{
-				mxEllipse.call(this);
-			};
-			mxUtils.extend(MagnitudeShape, mxEllipse);
-			MagnitudeShape.prototype.paintVertexShape = function(c, x, y, w, h)
-			{
-				c.begin();
-				c.moveTo(x, y);
-				c.lineTo(x, y + h);
-				c.lineTo(x + (w / 2), y + (h * 0.6));
-				c.lineTo(x + w, y + h);
-				c.lineTo(x + w, y);
-				c.lineTo(x + (w / 2), y + (h * 0.4));
-				c.lineTo(x, y);
-				c.fillAndStroke();
-			};
-
-			mxCellRenderer.registerShape('magnitude', MagnitudeShape);
-
 			// Checks if the browser is supported
-			if (!mxClient.isBrowserSupported())
-			{
+			if (!mxClient.isBrowserSupported()) {
 				// Displays an error message if the browser is not supported.
 				mxUtils.error('Browser is not supported!', 200, false);
 			}
-			else
-			{
+			else {
 				// Defines an icon for creating new connections in the connection handler.
 				// This will automatically disable the highlighting of the source vertex.
-				mxConnectionHandler.prototype.connectImage = new mxImage('javascript/src/images/connector.gif', 16, 16);
-
+				//mxConnectionHandler.prototype.connectImage = new mxImage('javascript/src/images/connector.gif', 16, 16);
+				
 				// Gets div-element of the toolbar
 				var toolbarContainer = document.getElementById('toolbarContainer');
 				// Creates new toolbar without event processing
@@ -97,33 +120,41 @@
 				graph.setConnectable(true);
 				graph.setMultigraph(false);
 
+				// Disables floating connections (only use with no connect image)
+				if (graph.connectionHandler.connectImage == null) {
+					graph.connectionHandler.isConnectableCell = function(cell) {
+					   return false;
+					};
+					mxEdgeHandler.prototype.isConnectableCell = function(cell) {
+						return graph.connectionHandler.isConnectableCell(cell);
+					};
+				}
+
 				// Stops editing on enter or escape keypress
 				var keyHandler = new mxKeyHandler(graph);
 				// Enables rubberband selection
 				var rubberband = new mxRubberband(graph);
 
-				var addVertex = function(icon, w, h, style)
-				{
-					var vertex = new mxCell(null, new mxGeometry(0, 0, w, h), style);
+				var addVertex = function(icon, w, h, style, value) {
+					var vertex = new mxCell(value, new mxGeometry(0, 0, w, h), style);
 					vertex.setVertex(true);
 				
 					var img = addToolbarItem(graph, toolbar, vertex, icon);
 					img.enabled = true;
 					
-					graph.getSelectionModel().addListener(mxEvent.CHANGE, function()
-					{
+					graph.getSelectionModel().addListener(mxEvent.CHANGE, function() {
 						var tmp = graph.isSelectionEmpty();
 						mxUtils.setOpacity(img, (tmp) ? 100 : 20);
 						img.enabled = tmp;
 					});
 				};
 				
-				addVertex('javascript/src/images/shapes/rectangle.gif', 100, 40, 'shape=rectangle');
-				addVertex('javascript/src/images/shapes/rounded.gif', 100, 50, 'shape=rounded');
-				addVertex('javascript/src/images/shapes/ellipse.gif', 50, 50, 'shape=ellipse');
-				addVertex('javascript/src/images/shapes/rhombus.gif', 50, 50, 'shape=rhombus');
-				addVertex('javascript/src/images/shapes/triangle_right.gif', 50, 50, 'shape=triangle');
-				addVertex('javascript/src/images/shapes/magnitude.gif', 100, 40, 'shape=magnitude');
+				addVertex('javascript/src/images/shapes/rectangle.gif', 100, 50, 'shape=rectangle', null);
+				addVertex('javascript/src/images/shapes/rounded.gif', 100, 50, 'shape=rounded', null);
+				addVertex('javascript/src/images/shapes/ellipse.gif', 50, 50, 'shape=ellipse', null);
+				addVertex('javascript/src/images/shapes/rhombus.gif', 50, 50, 'shape=rhombus', null);
+				addVertex('javascript/src/images/shapes/triangle_right.gif', 50, 50, 'shape=triangle', null);
+				addVertex('javascript/src/images/shapes/magnitude.gif', 80, 40, 'shape=magnitude', "MAG");
 				
 				// Gets the default parent for inserting new cells. This
 				// is normally the first child of the root (ie. layer 0).
@@ -140,7 +171,7 @@
 				style[mxConstants.STYLE_FONTCOLOR] = '#774400';
 				style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 				style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-				style[mxConstants.STYLE_FONTSIZE] = '12';
+				style[mxConstants.STYLE_FONTSIZE] = '11';
 				style[mxConstants.STYLE_FONTSTYLE] = 1;
 				graph.getStylesheet().putDefaultVertexStyle(style);
 		
@@ -150,33 +181,53 @@
 				style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
 				style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
 				style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-				style[mxConstants.STYLE_EDGE] = mxEdgeStyle.ElbowConnector;
+				//style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EDGESTYLE_ORTHOGONAL;
 				style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
 				style[mxConstants.STYLE_FONTSIZE] = '10';
 				graph.getStylesheet().putDefaultEdgeStyle(style);
-								
-				// Adds cells to the model in a single step
-				graph.getModel().beginUpdate();
-				try {
-					/*
-					var v1 = graph.insertVertex(parent, null, 'Hello,', 20, 20, 80, 30);
-					var v2 = graph.insertVertex(parent, null, 'World!', 200, 150, 80, 30);
-					var e1 = graph.insertEdge(parent, null, '', v1, v2);
-					*/
-                }
-				finally
-				{
-					// Updates the display
-					graph.getModel().endUpdate();
-				}
+
+				// Enables connect preview for the default edge style
+				graph.connectionHandler.createEdgeState = function(me) {
+					var edge = graph.createEdge(null, null, null, null, null);
+					return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
+				};
+				// Specifies the default edge style
+				graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
+
+				/**
+				* Undo / Redo Manager
+				*/
+				var undoManager = new mxUndoManager();
+				var listener = function(sender, evt) {
+					undoManager.undoableEditHappened(evt.getProperty('edit'));
+				};
+				graph.getModel().addListener(mxEvent.UNDO, listener);
+				graph.getView().addListener(mxEvent.UNDO, listener);
+
+				document.body.insertBefore(mxUtils.button('Redo', function() {
+					undoManager.redo();
+				}), document.body.firstChild).classList.add("button-redo");
+
+				document.body.insertBefore(mxUtils.button('Undo', function() {
+					undoManager.undo();
+				}), document.body.firstChild).classList.add("button-undo");
+
+				/**
+				* Event Handling on key strokes
+				*/
+				// Delete Entity
+				keyHandler.bindKey(46, function(evt) {
+					if (graph.isEnabled()) {
+						graph.removeCells();
+					}
+				});
 			}
 
 			function addToolbarItem(graph, toolbar, prototype, image) {
 				// Function that is executed when the image is dropped on
 				// the graph. The cell argument points to the cell under
 				// the mousepointer if there is one.
-				var funct = function(graph, evt, cell, x, y)
-				{
+				var funct = function(graph, evt, cell, x, y) {
 					graph.stopEditing(false);
 
 					var vertex = graph.getModel().cloneCell(prototype);
@@ -188,8 +239,7 @@
 				}
 				
 				// Creates the image which is used as the drag icon (preview)
-				var img = toolbar.addMode(null, image, function(evt, cell)
-				{
+				var img = toolbar.addMode(null, image, function(evt, cell) {
 					var pt = this.graph.getPointForEvent(evt);
 					funct(graph, evt, cell, pt.x, pt.y);
 				});
@@ -197,23 +247,18 @@
 				// Disables dragging if element is disabled. This is a workaround
 				// for wrong event order in IE. Following is a dummy listener that
 				// is invoked as the last listener in IE.
-				mxEvent.addListener(img, 'mousedown', function(evt)
-				{
+				mxEvent.addListener(img, 'mousedown', function(evt) {
 					// do nothing
 				});
 				
 				// This listener is always called first before any other listener
 				// in all browsers.
-				mxEvent.addListener(img, 'mousedown', function(evt)
-				{
-					if (img.enabled == false)
-					{
+				mxEvent.addListener(img, 'mousedown', function(evt) {
+					if (img.enabled == false) {
 						mxEvent.consume(evt);
 					}
-				});
-							
+				});	
 				mxUtils.makeDraggable(img, graph, funct);
-				
 				return img;
 			}
 		};
@@ -222,9 +267,10 @@
 
 <!-- Page passes the container for the graph to the program -->
 <body onload="main(document.getElementById('graphContainer'))">
+	<button class="button-redo" type="button" onclick="toggleGrid(document.getElementById('graphContainer'))">Toggle Grid</button>
 	<!-- Container for the toolbar containing the dragable elements -->
 	<div id="toolbarContainer"></div>
 	<!-- Creates a container for the graph with a grid wallpaper -->
-	<div id="graphContainer"></div>
+	<div id="graphContainer" class="grid"></div>
 </body>
 </html>
