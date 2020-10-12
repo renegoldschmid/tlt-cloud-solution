@@ -215,12 +215,94 @@
 				/**
 				* Event Handling on key strokes
 				*/
-				// Delete Entity
+				// "DEL" - Delete an Entity
 				keyHandler.bindKey(46, function(evt) {
 					if (graph.isEnabled()) {
 						graph.removeCells();
 					}
 				});
+
+				// "S" - Open Popup with XML-Code (Save)
+				keyHandler.bindKey(83, function(evt) {
+					var xml = getDiagramAsXml(true);
+					mxUtils.popup(xml, true);
+				});
+
+				// "Z" - Undo Action
+				keyHandler.bindKey(90, function(evt) {
+					undoManager.undo();
+				});
+
+				// "U" - Redo Action
+				keyHandler.bindKey(85, function(evt) {
+					undoManager.redo();
+				});
+
+				// "G" - Toggle Grid
+				keyHandler.bindKey(71, function(evt) {
+					toggleGrid(document.getElementById('graphContainer'));
+				});
+
+				// Filereader for Loading the diagram
+				var inputFile = document.getElementById('file-upload');
+				inputFile.onchange = function() {
+					var file = this.files[0];
+					var reader = new FileReader();  
+					reader.onload = function(ev) {
+						loadDiagram(ev.target.result);
+					};  
+					reader.readAsText(file);
+				};
+
+				// Event Listener for saving the diagram as XML
+				document.getElementById("download-xml").addEventListener("click", function(){
+					saveDiagram("diagram.xml");
+				}, false);
+			}
+
+			function saveDiagram(filename) {
+				var xml = getDiagramAsXml(false);
+				var element = document.createElement('a');
+				element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(xml));
+				element.setAttribute('download', filename);
+
+				element.style.display = 'none';
+				document.body.appendChild(element);
+
+				element.click();
+
+				document.body.removeChild(element);
+			}
+
+			function loadDiagram(xmlFile) {
+				//var testXml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+				var parsedXml = mxUtils.parseXml(xmlFile);
+				var codec = new mxCodec(parsedXml);
+				var element = parsedXml.documentElement.firstChild;
+				var cells = [];
+
+				while (element != null) {
+					cells.push(codec.decode(element));
+					element = element.nextSibling;
+				}
+
+				graph.addCells(cells);
+			}
+
+			function getDiagramAsXml(prettyFormatted) {
+				var encoder = new mxCodec();
+				var encodedModel = encoder.encode(graph.getModel());
+
+				var xml;
+				if (prettyFormatted) {
+					xml = mxUtils.getPrettyXml(encodedModel);
+				} else {
+					xml = mxUtils.getXml(encodedModel);
+				}
+				
+				// Getting rid of the mxGraphModel-tag
+				xml = xml.substring(xml.indexOf("<mxGraphModel>")+"<mxGraphModel>".length, xml.indexOf("</mxGraphModel>"));
+				return xml;
 			}
 
 			function addToolbarItem(graph, toolbar, prototype, image) {
@@ -270,7 +352,25 @@
 	<button class="button-redo" type="button" onclick="toggleGrid(document.getElementById('graphContainer'))">Toggle Grid</button>
 	<!-- Container for the toolbar containing the dragable elements -->
 	<div id="toolbarContainer"></div>
-	<!-- Creates a container for the graph with a grid wallpaper -->
+	<!-- Container for the graph with grid wallpaper -->
 	<div id="graphContainer" class="grid"></div>
+	<!-- Upload Button for locally saved diagrams -->
+	<label for="file-upload" id="saveUpload">
+		Upload XML
+	</label>
+	<input id="file-upload" type="file"/>
+	<!-- Download Button for saving a diagram as XML-File -->
+	<input type="button" id="download-xml" class="button-redo" value="Download as XML"/>
+	<br />
+	<div id="hotkeys">
+		<h3>Hotkeys</h3>
+		<ul>
+			<li>Z - Undo last step</li>
+			<li>U - Redo last step</li>
+			<li>DEL - Delete selected Entities</li>
+			<li>G - Toggle Grid</li>
+			<li>S - Show Diagram as XML</li>
+		</ul>
+	</div>
 </body>
 </html>

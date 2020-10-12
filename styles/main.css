@@ -50,6 +50,7 @@ img.mxToolbarMode {
 .button-undo:hover,
 .button-redo:hover {
     background: #3348ad;
+    cursor: pointer;
 }
 
 .button-undo:active,
@@ -68,5 +69,29 @@ img.mxToolbarMode {
 }
 
 .button-undo {
+    margin-left: 100px;
+}
+
+#saveUpload {
+    margin-top: 20px;
+    margin-left: 100px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+
+    color: white;
+    font-size: 12px;
+    text-transform: uppercase;
+    background: #516efc;
+    padding: 12px 20px;
+    box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.5);
+}
+
+input[type="file"] {
+    display: none;
+}
+
+#hotkeys {
     margin-left: 100px;
 }
