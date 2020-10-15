@@ -4,36 +4,64 @@ html, body {
 }
 
 #toolbarContainer {
-    border: 2px solid black;
     position: absolute;
-    overflow: hidden;
-    width: 68px;
-    padding: 2px;
-    top: 0px;
-    bottom: 0px;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 73px;
+    padding-left: 10px;
+}
+
+#sidebarContainer {
+    position: absolute;
+    top: 73px;
+    left: 0;
+    bottom: 0;
+    width: 160px;
+    overflow-x: hidden;
     cursor: pointer;
+    padding-top: 10px;
+    padding-left: 10px;
 }
 
 img.mxToolbarMode {
-    max-width: 64px;
+    max-width: 60px;
+    margin: 5px !important;
 }
 
 #graphContainer {
-    border: 2px solid black;
-    position: relative;
-    margin-left: 74px;
-    overflow: hidden;
+    position: absolute;
+    top: 73px;
+    left: 160px;
     width: 1200px;
     height: 860px;
+    overflow: auto;
     cursor: default;
+    border: 2px solid black;
+}
+
+#inspectorContainer {
+    position: absolute;
+    top: 73px;
+    right: 0;
+    bottom: 0;
+    width: 260px;
+    padding: 10px;
+    overflow: hidden;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .grid {
     background: url('../javascript/src/images/grid.gif');
 }
 
-.button-undo, 
-.button-redo {
+.button {
     padding: 12px 20px;
     margin: 15px 5px;
     border: none;
@@ -44,54 +72,29 @@ img.mxToolbarMode {
     font-size: 12px;
     text-transform: uppercase;
     transition: background-color .3s ease;
-    overflow: hidden;
 }
 
-.button-undo:hover,
-.button-redo:hover {
+.button:hover,
+#saveUpload:hover {
     background: #3348ad;
     cursor: pointer;
 }
 
-.button-undo:active,
-.button-redo:active {
+.button:active,
+#saveUpload:hover {
     background: #212533;
 }
 
-.button-undo:hover,
-.button-redo:hover,
-.button-undo:active,
-.button-redo:active,
-.button-undo:focus,
-.button-redo:focus {
+.button:hover,
+.button:active,
+.button:focus,
+#saveUpload:hover,
+#saveUpload:active,
+#saveUpload:focus {
     border: none;
     outline: none;
 }
 
-.button-undo {
-    margin-left: 100px;
-}
-
-#saveUpload {
-    margin-top: 20px;
-    margin-left: 100px;
-    border: 1px solid #ccc;
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-
-    color: white;
-    font-size: 12px;
-    text-transform: uppercase;
-    background: #516efc;
-    padding: 12px 20px;
-    box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.5);
-}
-
 input[type="file"] {
     display: none;
-}
-
-#hotkeys {
-    margin-left: 100px;
 }
