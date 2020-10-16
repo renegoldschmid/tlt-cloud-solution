@@ -97,3 +97,8 @@ footer {
 input[type="file"] {
     display: none;
 }
+
+#titleContainer {
+    display: inline-block;
+    padding: 0px 10px;
+}

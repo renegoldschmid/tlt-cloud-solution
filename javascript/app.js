@@ -5,9 +5,21 @@ function toggleGrid(element) {
     element.classList.toggle("grid");
 }
 
+function getDiagramTitle() {
+    return document.getElementById("diagramTitle").innerHTML;
+}
+
+function setDiagramTitle(title) {
+    document.getElementById("diagramTitle").innerHTML = title;
+}
+
 /**
-* Create and register Magnitude Shape
+* Create and register Custom Shapes
 */
+
+/**
+ * MAGNITUDE SHAPE
+ */
 function MagnitudeShape() {
     mxEllipse.call(this);
 };
@@ -56,7 +68,7 @@ mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0)
 // Edges have no connection points
 mxPolyline.prototype.constraints = null;
 
-// Defines the default constraints for all shapes
+// Defines the default constraints for the Magnitude Shape
 MagnitudeShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0, 0), true),
                                         new mxConnectionConstraint(new mxPoint(0.5, 0.3), false),
                                         new mxConnectionConstraint(new mxPoint(1, 0), true),
@@ -67,9 +79,7 @@ MagnitudeShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0
                                         new mxConnectionConstraint(new mxPoint(1, 1), true)];
 
 
-// Program starts here. Creates a sample graph in the
-// DOM node with the specified ID. This function is invoked
-// from the onLoad event handler of the document (see below).
+// App starts here. This function is invoked from the onLoad event handler of the document.
 function main(container) {
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
@@ -206,8 +216,8 @@ function main(container) {
         });
         redoButton.classList.add("button", "button-redo");
 
-        toolbar.insertBefore(redoButton, toolbar.childNodes[0]);
-        toolbar.insertBefore(undoButton, toolbar.childNodes[0]);
+        toolbar.insertBefore(redoButton, toolbar.childNodes[2]);
+        toolbar.insertBefore(undoButton, toolbar.childNodes[2]);
 
         /**
         * Event Handling on key strokes
@@ -255,6 +265,42 @@ function main(container) {
         document.getElementById("download-xml").addEventListener("click", function(){
             saveDiagram("diagram.xml");
         }, false);
+
+        /**
+         * Diagram Title Events
+         */
+        var diagramTitleContainer = document.getElementById("titleContainer");
+        var diagramTitle = document.getElementById("diagramTitle");
+        var editDiagramTitleIcon = document.getElementById("editDiagramTitleIcon");
+
+        diagramTitle.onfocus = function() {
+            if (editDiagramTitleIcon.classList.contains("d-none")) {
+                editDiagramTitleIcon.classList.toggle("d-none");
+            }
+        }
+
+        diagramTitle.onblur = function() {
+            /*
+            var text = this.innerHTML;
+            console.log(text);
+            text = text.replace(/&/g, "&amp").replace(/</g, "&lt;");
+            console.log("Content committed, span " +
+                    (this.id || "anonymous") +
+                    ": '" +
+                    text + "'");
+            */
+            if (!editDiagramTitleIcon.classList.contains("d-none")) {
+                editDiagramTitleIcon.classList.toggle("d-none");
+            }
+        };
+
+        diagramTitleContainer.onmouseover = function() {
+            editDiagramTitleIcon.classList.toggle("d-none");
+        }
+
+        diagramTitleContainer.onmouseout = function() {
+            editDiagramTitleIcon.classList.toggle("d-none");
+        }
     }
 
     function saveDiagram(filename) {
@@ -272,7 +318,15 @@ function main(container) {
     }
 
     function loadDiagram(xmlFile) {
-        //var testXml = '<root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+        //var testXml = '<title>Diagram Title</title><root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
+        // Reading the Diagram-Title
+        var diagramTitle = xmlFile.substring(xmlFile.indexOf("<title>")+"<title>".length, xmlFile.indexOf("</title>"));
+        // Setting the loaded title
+        setDiagramTitle(diagramTitle);
+        // Getting rid of the title-tag in the save-file to make it parseable
+        xmlFile = xmlFile.substring(xmlFile.indexOf("</title>")+"</title>".length, xmlFile.length);
+
+        // Parse and load the diagram
         var parsedXml = mxUtils.parseXml(xmlFile);
         var codec = new mxCodec(parsedXml);
         var element = parsedXml.documentElement.firstChild;
@@ -299,6 +353,8 @@ function main(container) {
         
         // Getting rid of the mxGraphModel-tag
         xml = xml.substring(xml.indexOf("<mxGraphModel>")+"<mxGraphModel>".length, xml.indexOf("</mxGraphModel>"));
+        // Adding the current set title to the save-file
+        xml = "<title>" + getDiagramTitle() + "</title>" + xml;
         return xml;
     }
 
