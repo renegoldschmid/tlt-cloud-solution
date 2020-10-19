@@ -23,6 +23,11 @@
 <body onload="main(document.getElementById('graphContainer'))">
 	<!-- Container for the toolbar containing interactables for the user, e.g. undo and redo buttons -->
 	<div id="toolbarContainer" class="bg-light border-bottom">
+		<svg width="2em" height="2em" viewBox="0 0 16 16" id="logo" class="bi bi-emoji-smile" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+			<path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+			<path fill-rule="evenodd" d="M4.285 9.567a.5.5 0 0 1 .683.183A3.498 3.498 0 0 0 8 11.5a3.498 3.498 0 0 0 3.032-1.75.5.5 0 1 1 .866.5A4.498 4.498 0 0 1 8 12.5a4.498 4.498 0 0 1-3.898-2.25.5.5 0 0 1 .183-.683z"/>
+			<path d="M7 6.5C7 7.328 6.552 8 6 8s-1-.672-1-1.5S5.448 5 6 5s1 .672 1 1.5zm4 0c0 .828-.448 1.5-1 1.5s-1-.672-1-1.5S9.448 5 10 5s1 .672 1 1.5z"/>
+		  </svg>
 		<div id="titleContainer">
 			<span id="diagramTitle" contenteditable="true">Untitled Diagram</span>
 			<svg width="1em" height="1em" viewBox="0 0 16 16" id="editDiagramTitleIcon" class="bi bi-pencil-square d-none" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -30,15 +35,24 @@
 				<path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
 			</svg>
 		</div>
-		
 		<button class="button" type="button" onclick="toggleGrid(document.getElementById('graphContainer'))">Toggle Grid</button>
 		<!-- Upload Button for locally saved diagrams -->
 		<label for="file-upload" id="saveUpload" class="button">
-			Upload Savefile
+			Upload Savefile&nbsp;
+			<svg width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-upload" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+				<path fill-rule="evenodd" d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+			  </svg>
 		</label>
 		<input id="file-upload" type="file"/>
 		<!-- Download Button for saving a diagram as XML-File -->
-		<input type="button" id="download-xml" class="button" value="Download Savefile"/>
+		<button class="button" type="button" id="download-xml">
+			Download Savefile&nbsp;
+			<svg width="1.3em" height="1.3em" viewBox="0 0 16 16" class="bi bi-download" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+				<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+				<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+			  </svg>
+		</button>
 	</div>
 	<!-- Container for the sidebar containing the dragable elements -->
 	<div id="sidebarContainer" class="bg-light border-right"></div>
@@ -57,7 +71,9 @@
 		</div>
 	</div>
 	<footer class="py-3 bg-light border-top">
-		<div class="container">© 2020, TLT Cloud Solution by René Goldschmid.</div>
+		<div class="container">
+			<span id="footerText">© 2020, TLT Cloud Solution by René Goldschmid.</span>
+		</div>
 	</footer>
 	<!-- jQuery and JS bundle w/ Popper.js -->
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

@@ -1,6 +1,12 @@
-/**
- * Helper Functions
+// Version Number
+var version = "v0.4.0";
+
+/** 
+ * ##################################################
+ * ############### Support Functions ################
+ * ##################################################
  */
+
 function toggleGrid(element) {
     element.classList.toggle("grid");
 }
@@ -13,83 +19,102 @@ function setDiagramTitle(title) {
     document.getElementById("diagramTitle").innerHTML = title;
 }
 
-/**
-* Create and register Custom Shapes
-*/
+function setFooterText() {
+    var text = "© 2020, TLT Cloud Solution (" + version + ") by René Goldschmid."
+    document.getElementById("footerText").innerHTML = text;
+}
 
-/**
- * MAGNITUDE SHAPE
+/** 
+ * ##################################################
+ * #################### App Code ####################
+ * ##################################################
  */
-function MagnitudeShape() {
-    mxEllipse.call(this);
-};
-mxUtils.extend(MagnitudeShape, mxEllipse);
-MagnitudeShape.prototype.paintVertexShape = function(c, x, y, w, h) {
-    c.begin();
-    c.moveTo(x, y);
-    c.lineTo(x, y + h);
-    c.lineTo(x + (w / 2), y + (h * 0.65));
-    c.lineTo(x + w, y + h);
-    c.lineTo(x + w, y);
-    c.lineTo(x + (w / 2), y + (h * 0.35));
-    c.lineTo(x, y);
-    c.fillAndStroke();
-};
-mxCellRenderer.registerShape('magnitude', MagnitudeShape);
-
-// Overridden to define per-shape connection points
-mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
-    if (terminal != null && terminal.shape != null) {
-        if (terminal.shape.stencil != null) {
-            if (terminal.shape.stencil.constraints != null) {
-                return terminal.shape.stencil.constraints;
-            }
-        } else if (terminal.shape.constraints != null) {
-            return terminal.shape.constraints;
-        }
-    }
-    return null;
-};
-
-// Defines the default constraints for all shapes
-mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
-                                    new mxConnectionConstraint(new mxPoint(0.5, 0), true),
-                                    new mxConnectionConstraint(new mxPoint(0.75, 0), true),
-                                    new mxConnectionConstraint(new mxPoint(0, 0.25), true),
-                                    new mxConnectionConstraint(new mxPoint(0, 0.5), true),
-                                    new mxConnectionConstraint(new mxPoint(0, 0.75), true),
-                                    new mxConnectionConstraint(new mxPoint(1, 0.25), true),
-                                    new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-                                    new mxConnectionConstraint(new mxPoint(1, 0.75), true),
-                                    new mxConnectionConstraint(new mxPoint(0.25, 1), true),
-                                    new mxConnectionConstraint(new mxPoint(0.5, 1), true),
-                                    new mxConnectionConstraint(new mxPoint(0.75, 1), true)];
-
-// Edges have no connection points
-mxPolyline.prototype.constraints = null;
-
-// Defines the default constraints for the Magnitude Shape
-MagnitudeShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0, 0), true),
-                                        new mxConnectionConstraint(new mxPoint(0.5, 0.3), false),
-                                        new mxConnectionConstraint(new mxPoint(1, 0), true),
-                                        new mxConnectionConstraint(new mxPoint(0, 0.5), true),
-                                        new mxConnectionConstraint(new mxPoint(1, 0.5), true),
-                                        new mxConnectionConstraint(new mxPoint(0, 1), true),
-                                        new mxConnectionConstraint(new mxPoint(0.5, 0.7), false),
-                                        new mxConnectionConstraint(new mxPoint(1, 1), true)];
-
-
 // App starts here. This function is invoked from the onLoad event handler of the document.
 function main(container) {
+    // Set Footertext with current Version
+    setFooterText();
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
         // Displays an error message if the browser is not supported.
         mxUtils.error('Browser is not supported!', 200, false);
     }
+    // If browser is supported, create App
     else {
-        // Defines an icon for creating new connections in the connection handler.
-        // This will automatically disable the highlighting of the source vertex.
-        //mxConnectionHandler.prototype.connectImage = new mxImage('javascript/src/images/connector.gif', 16, 16);
+        /** 
+         * ##################################################
+         * ########### Custom Shape Registration ############
+         * ##################################################
+         */
+
+        /**
+         * ############### Default Settings #################
+         */
+        // Overridden to define per-shape connection points
+        mxGraph.prototype.getAllConnectionConstraints = function(terminal, source) {
+            if (terminal != null && terminal.shape != null) {
+                if (terminal.shape.stencil != null) {
+                    if (terminal.shape.stencil.constraints != null) {
+                        return terminal.shape.stencil.constraints;
+                    }
+                } else if (terminal.shape.constraints != null) {
+                    return terminal.shape.constraints;
+                }
+            }
+            return null;
+        };
+
+        // Defines the default constraints for all shapes
+        mxShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0.25, 0), true),
+                                            new mxConnectionConstraint(new mxPoint(0.5, 0), true),
+                                            new mxConnectionConstraint(new mxPoint(0.75, 0), true),
+                                            new mxConnectionConstraint(new mxPoint(0, 0.25), true),
+                                            new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+                                            new mxConnectionConstraint(new mxPoint(0, 0.75), true),
+                                            new mxConnectionConstraint(new mxPoint(1, 0.25), true),
+                                            new mxConnectionConstraint(new mxPoint(1, 0.5), true),
+                                            new mxConnectionConstraint(new mxPoint(1, 0.75), true),
+                                            new mxConnectionConstraint(new mxPoint(0.25, 1), true),
+                                            new mxConnectionConstraint(new mxPoint(0.5, 1), true),
+                                            new mxConnectionConstraint(new mxPoint(0.75, 1), true)];
+
+        // Edges have no connection points
+        mxPolyline.prototype.constraints = null;
+
+        /**
+         * ################ Magnitude Shape #################
+         */
+        function MagnitudeShape() {
+            mxEllipse.call(this);
+        };
+        mxUtils.extend(MagnitudeShape, mxEllipse);
+        MagnitudeShape.prototype.paintVertexShape = function(c, x, y, w, h) {
+            c.begin();
+            c.moveTo(x, y);
+            c.lineTo(x, y + h);
+            c.lineTo(x + (w / 2), y + (h * 0.65));
+            c.lineTo(x + w, y + h);
+            c.lineTo(x + w, y);
+            c.lineTo(x + (w / 2), y + (h * 0.35));
+            c.lineTo(x, y);
+            c.fillAndStroke();
+        };
+        mxCellRenderer.registerShape('magnitude', MagnitudeShape);
+
+        // Defines the default constraints for the Magnitude Shape
+        MagnitudeShape.prototype.constraints = [new mxConnectionConstraint(new mxPoint(0, 0), true),
+                                                new mxConnectionConstraint(new mxPoint(0.5, 0.3), false),
+                                                new mxConnectionConstraint(new mxPoint(1, 0), true),
+                                                new mxConnectionConstraint(new mxPoint(0, 0.5), true),
+                                                new mxConnectionConstraint(new mxPoint(1, 0.5), true),
+                                                new mxConnectionConstraint(new mxPoint(0, 1), true),
+                                                new mxConnectionConstraint(new mxPoint(0.5, 0.7), false),
+                                                new mxConnectionConstraint(new mxPoint(1, 1), true)];
+
+        /** 
+         * ##################################################
+         * ############## Sidebar Registration ##############
+         * ##################################################
+         */
         
         // Gets div-element of the sidebar
         var sidebarContainer = document.getElementById('sidebarContainer');
@@ -104,8 +129,11 @@ function main(container) {
             new mxDivResizer(container);
         }
 
-        // Disables the built-in context menu
-        mxEvent.disableContextMenu(container);
+        /** 
+         * ##################################################
+         * ################## App Settings ##################
+         * ##################################################
+         */
         
         // Creates the model and the graph inside the container
         // using the fastest rendering available on the browser
@@ -115,6 +143,20 @@ function main(container) {
         // Enables new connections in the graph
         graph.setConnectable(true);
         graph.setMultigraph(false);
+
+        // Disables the built-in context menu
+        mxEvent.disableContextMenu(container);
+
+        // Enables rubberband selection
+        var rubberband = new mxRubberband(graph);
+
+        // Gets the default parent for inserting new cells. This
+        // is normally the first child of the root (ie. layer 0).
+        var parent = graph.getDefaultParent();
+
+        // Defines an icon for creating new connections in the connection handler.
+        // This will automatically disable the highlighting of the source vertex.
+        //mxConnectionHandler.prototype.connectImage = new mxImage('javascript/src/images/connector.gif', 16, 16);
 
         // Disables floating connections (only use with no connect image)
         if (graph.connectionHandler.connectImage == null) {
@@ -126,11 +168,12 @@ function main(container) {
             };
         }
 
-        // Stops editing on enter or escape keypress
-        var keyHandler = new mxKeyHandler(graph);
-        // Enables rubberband selection
-        var rubberband = new mxRubberband(graph);
-
+        /** 
+         * ##################################################
+         * ################ Defining Shapes #################
+         * ##################################################
+         */
+        
         var addVertex = function(icon, w, h, style, value) {
             var vertex = new mxCell(value, new mxGeometry(0, 0, w, h), style);
             vertex.setVertex(true);
@@ -146,31 +189,34 @@ function main(container) {
         };
         
         addVertex('javascript/src/images/shapes/rectangle.gif', 100, 50, 'shape=rectangle', null);
-        addVertex('javascript/src/images/shapes/rounded.gif', 100, 50, 'shape=rounded', null);
+        addVertex('javascript/src/images/shapes/rounded.gif', 100, 50, 'rounded=1', null); // shape = rounded seems to be deprecated
         addVertex('javascript/src/images/shapes/ellipse.gif', 50, 50, 'shape=ellipse', null);
         addVertex('javascript/src/images/shapes/rhombus.gif', 50, 50, 'shape=rhombus', null);
         addVertex('javascript/src/images/shapes/triangle_right.gif', 50, 50, 'shape=triangle', null);
         addVertex('javascript/src/images/shapes/magnitude.gif', 80, 40, 'shape=magnitude', "MAG");
         
-        // Gets the default parent for inserting new cells. This
-        // is normally the first child of the root (ie. layer 0).
-        var parent = graph.getDefaultParent();
+        /** 
+         * ##################################################
+         * ################# Style Settings #################
+         * ##################################################
+         */
 
         // Creates the default style for vertices
         var style = [];
         style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
         style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-        style[mxConstants.STYLE_STROKECOLOR] = 'gray';
-        style[mxConstants.STYLE_ROUNDED] = true;
-        style[mxConstants.STYLE_FILLCOLOR] = '#EEEEEE';
+        //style[mxConstants.STYLE_ROUNDED] = true;
+        style[mxConstants.STYLE_STROKEWIDTH] = 1.5;
+        style[mxConstants.STYLE_STROKECOLOR] = '#232121'; // Dark Gray
+        style[mxConstants.STYLE_FILLCOLOR] = '#F3F3F3'; // Default: #EEEEEE
         style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-        style[mxConstants.STYLE_FONTCOLOR] = '#774400';
-        style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-        style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-        style[mxConstants.STYLE_FONTSIZE] = '11';
-        style[mxConstants.STYLE_FONTSTYLE] = 1;
+        //style[mxConstants.STYLE_FONTCOLOR] = '#774400';
+        //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+        //style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
+        //style[mxConstants.STYLE_FONTSIZE] = '11';
+        //style[mxConstants.STYLE_FONTSTYLE] = 1;
         graph.getStylesheet().putDefaultVertexStyle(style);
-
+/*
         // Creates the default style for edges
         style = [];
         style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
@@ -192,19 +238,19 @@ function main(container) {
         graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
         //style = graph.getStylesheet().getDefaultEdgeStyle();
         style[mxConstants.STYLE_CURVED] = '1';
+*/
+        /** 
+         * ##################################################
+         * ############## UNDO / REDO Manager ###############
+         * ##################################################
+         */
 
-        /**
-        * Undo / Redo Manager
-        */
         var undoManager = new mxUndoManager();
         var listener = function(sender, evt) {
             undoManager.undoableEditHappened(evt.getProperty('edit'));
         };
         graph.getModel().addListener(mxEvent.UNDO, listener);
         graph.getView().addListener(mxEvent.UNDO, listener);
-
-        // Add Undo/Redo-Buttons to the Toolbar
-        var toolbar = document.getElementById('toolbarContainer');
 
         var undoButton = mxUtils.button('Undo', function() {
             undoManager.undo();
@@ -216,12 +262,20 @@ function main(container) {
         });
         redoButton.classList.add("button", "button-redo");
 
-        toolbar.insertBefore(redoButton, toolbar.childNodes[2]);
-        toolbar.insertBefore(undoButton, toolbar.childNodes[2]);
+        // Add Undo/Redo-Buttons to the Toolbar
+        var toolbar = document.getElementById('toolbarContainer');
+        toolbar.insertBefore(redoButton, toolbar.childNodes[4]); // Amount Nodes before + 1
+        toolbar.insertBefore(undoButton, toolbar.childNodes[4]); // Amount Nodes before + 1
 
-        /**
-        * Event Handling on key strokes
-        */
+        /** 
+         * ##################################################
+         * ############# Key Handling / Binding #############
+         * ##################################################
+         */
+
+        // By Default, stops editing on enter or escape keypress
+        var keyHandler = new mxKeyHandler(graph);
+
         // "DEL" - Delete an Entity
         keyHandler.bindKey(46, function(evt) {
             if (graph.isEnabled()) {
@@ -250,8 +304,18 @@ function main(container) {
             toggleGrid(document.getElementById('graphContainer'));
         });
 
-        // Filereader for Loading the diagram
+        /** 
+         * ##################################################
+         * ########### Features / Event Handling ############
+         * ##################################################
+         */
+
+        /**
+         * ############ Save / Load Functionality ###########
+         */
         var inputFile = document.getElementById('file-upload');
+
+        // Event Handler: Reading the input-file
         inputFile.onchange = function() {
             var file = this.files[0];
             var reader = new FileReader();  
@@ -261,48 +325,60 @@ function main(container) {
             reader.readAsText(file);
         };
 
-        // Event Listener for saving the diagram as XML
+        // Event Handler: Downloading the Save-File
         document.getElementById("download-xml").addEventListener("click", function(){
             saveDiagram("diagram.xml");
         }, false);
 
         /**
-         * Diagram Title Events
+         * ################# Diagram Title ##################
          */
         var diagramTitleContainer = document.getElementById("titleContainer");
         var diagramTitle = document.getElementById("diagramTitle");
         var editDiagramTitleIcon = document.getElementById("editDiagramTitleIcon");
 
+        // Event Handler: Clicking the title
         diagramTitle.onfocus = function() {
             if (editDiagramTitleIcon.classList.contains("d-none")) {
                 editDiagramTitleIcon.classList.toggle("d-none");
             }
         }
 
+        // Event Handler: Finished editing the title
         diagramTitle.onblur = function() {
-            /*
-            var text = this.innerHTML;
-            console.log(text);
-            text = text.replace(/&/g, "&amp").replace(/</g, "&lt;");
-            console.log("Content committed, span " +
-                    (this.id || "anonymous") +
-                    ": '" +
-                    text + "'");
-            */
+            // TODO: Use Regex for securing a clean file-name
+            this.innerHTML = this.innerHTML.replace(/&/g, "&amp")
+                                           .replace(/</g, "&lt;")
+                                           .replace(/>/g, "&gt;");
+            
             if (!editDiagramTitleIcon.classList.contains("d-none")) {
                 editDiagramTitleIcon.classList.toggle("d-none");
             }
         };
 
+        // Event Handler: Hovering the diagram title
         diagramTitleContainer.onmouseover = function() {
             editDiagramTitleIcon.classList.toggle("d-none");
         }
-
         diagramTitleContainer.onmouseout = function() {
             editDiagramTitleIcon.classList.toggle("d-none");
         }
-    }
 
+        /**
+         * ################ END OF APPCODE ##################
+         */
+    }
+    
+    /** 
+     * ##################################################
+     * ################# Core Functions #################
+     * ##################################################
+     */
+
+    /**
+     * Downloads a XML File of the current state to the user's storage
+     * @param {*} filename 
+     */
     function saveDiagram(filename) {
         var xml = getDiagramAsXml(false);
         var element = document.createElement('a');
@@ -317,6 +393,10 @@ function main(container) {
         document.body.removeChild(element);
     }
 
+    /**
+     * Loads a diagram from a given XML File
+     * @param {*} xmlFile 
+     */
     function loadDiagram(xmlFile) {
         //var testXml = '<title>Diagram Title</title><root><mxCell id="2" value="Hello," vertex="1"><mxGeometry x="20" y="20" width="80" height="30" as="geometry"/></mxCell><mxCell id="3" value="World!" vertex="1"><mxGeometry x="200" y="150" width="80" height="30" as="geometry"/></mxCell><mxCell id="4" value="" edge="1" source="2" target="3"><mxGeometry relative="1" as="geometry"/></mxCell></root>';
         // Reading the Diagram-Title
@@ -340,6 +420,12 @@ function main(container) {
         graph.addCells(cells);
     }
 
+    /**
+     * Creates an XML String of the current diagram
+     * 
+     * If true, the generated string gets formatted in a readable manner
+     * @param {*} prettyFormatted 
+     */
     function getDiagramAsXml(prettyFormatted) {
         var encoder = new mxCodec();
         var encodedModel = encoder.encode(graph.getModel());
@@ -358,6 +444,13 @@ function main(container) {
         return xml;
     }
 
+    /**
+     * Adds Icons of all available models to the sidebar
+     * @param {*} graph 
+     * @param {*} sidebar 
+     * @param {*} prototype 
+     * @param {*} image 
+     */
     function addSidebarItem(graph, sidebar, prototype, image) {
         // Function that is executed when the image is dropped on
         // the graph. The cell argument points to the cell under
