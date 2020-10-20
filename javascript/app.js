@@ -96,6 +96,7 @@ function main(container) {
             c.lineTo(x + w, y);
             c.lineTo(x + (w / 2), y + (h * 0.35));
             c.lineTo(x, y);
+            c.lineTo(x, y + 1); // Repeat last line to prevent a sharp edge in the top left corner
             c.fillAndStroke();
         };
         mxCellRenderer.registerShape('magnitude', MagnitudeShape);
@@ -188,45 +189,46 @@ function main(container) {
             });
         };
         
-        addVertex('javascript/src/images/shapes/rectangle.gif', 100, 50, 'shape=rectangle', null);
-        addVertex('javascript/src/images/shapes/rounded.gif', 100, 50, 'rounded=1', null); // shape = rounded seems to be deprecated
-        addVertex('javascript/src/images/shapes/ellipse.gif', 50, 50, 'shape=ellipse', null);
-        addVertex('javascript/src/images/shapes/rhombus.gif', 50, 50, 'shape=rhombus', null);
-        addVertex('javascript/src/images/shapes/triangle_right.gif', 50, 50, 'shape=triangle', null);
-        addVertex('javascript/src/images/shapes/magnitude.gif', 80, 40, 'shape=magnitude', "MAG");
+        addVertex('javascript/src/images/shapes/rectangle.gif', 120, 60, 'shape=rectangle', null);
+        addVertex('javascript/src/images/shapes/rounded.gif', 120, 60, 'rounded=1', null); // shape = rounded seems to be deprecated
+        addVertex('javascript/src/images/shapes/ellipse.gif', 60, 60, 'shape=ellipse', null);
+        addVertex('javascript/src/images/shapes/rhombus.gif', 60, 60, 'shape=rhombus', null);
+        addVertex('javascript/src/images/shapes/triangle_right.gif', 60, 60, 'shape=triangle', null);
+        addVertex('javascript/src/images/shapes/magnitude.gif', 90, 45, 'shape=magnitude', "MAG");
         
         /** 
          * ##################################################
          * ################# Style Settings #################
          * ##################################################
          */
-
         // Creates the default style for vertices
         var style = [];
+        //style[mxConstants.STYLE_ROUNDED] = true;
         style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_RECTANGLE;
         style[mxConstants.STYLE_PERIMETER] = mxPerimeter.RectanglePerimeter;
-        //style[mxConstants.STYLE_ROUNDED] = true;
+        //style[mxConstants.STYLE_SHADOW] = true; // TODO: Make it optional
         style[mxConstants.STYLE_STROKEWIDTH] = 1.5;
         style[mxConstants.STYLE_STROKECOLOR] = '#232121'; // Dark Gray
         style[mxConstants.STYLE_FILLCOLOR] = '#F3F3F3'; // Default: #EEEEEE
         style[mxConstants.STYLE_GRADIENTCOLOR] = 'white';
-        //style[mxConstants.STYLE_FONTCOLOR] = '#774400';
-        //style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
-        //style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-        //style[mxConstants.STYLE_FONTSIZE] = '11';
-        //style[mxConstants.STYLE_FONTSTYLE] = 1;
-        graph.getStylesheet().putDefaultVertexStyle(style);
-/*
-        // Creates the default style for edges
-        style = [];
-        style[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
-        style[mxConstants.STYLE_STROKECOLOR] = '#6482B9';
+        style[mxConstants.STYLE_FONTCOLOR] = '#0E0719';
+        style[mxConstants.STYLE_FONTSIZE] = '11';
+        style[mxConstants.STYLE_FONTSTYLE] = 1;
         style[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
         style[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_MIDDLE;
-        //style[mxConstants.STYLE_EDGE] = mxEdgeStyle.EDGESTYLE_ORTHOGONAL;
-        style[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
-        style[mxConstants.STYLE_FONTSIZE] = '10';
-        graph.getStylesheet().putDefaultEdgeStyle(style);
+        graph.getStylesheet().putDefaultVertexStyle(style);
+
+        // Creates the default style for edges
+        var edgeStyle = [];
+        edgeStyle[mxConstants.STYLE_SHAPE] = mxConstants.SHAPE_CONNECTOR;
+        edgeStyle[mxConstants.STYLE_STROKECOLOR] = '#0E0719'; // Default: #6482B9
+        edgeStyle[mxConstants.STYLE_ALIGN] = mxConstants.ALIGN_CENTER;
+        edgeStyle[mxConstants.STYLE_VERTICAL_ALIGN] = mxConstants.ALIGN_BOTTOM;
+        edgeStyle[mxConstants.STYLE_EDGE] = mxConstants.EDGESTYLE_ORTHOGONAL;
+        edgeStyle[mxConstants.STYLE_CURVED] = '1';
+        edgeStyle[mxConstants.STYLE_ENDARROW] = mxConstants.ARROW_CLASSIC;
+        edgeStyle[mxConstants.STYLE_FONTSIZE] = '11';
+        graph.getStylesheet().putDefaultEdgeStyle(edgeStyle);
 
         // Enables connect preview for the default edge style
         graph.connectionHandler.createEdgeState = function(me) {
@@ -234,11 +236,6 @@ function main(container) {
             return new mxCellState(this.graph.view, edge, this.graph.getCellStyle(edge));
         };
 
-        // Specifies the default edge style
-        graph.getStylesheet().getDefaultEdgeStyle()['edgeStyle'] = 'orthogonalEdgeStyle';
-        //style = graph.getStylesheet().getDefaultEdgeStyle();
-        style[mxConstants.STYLE_CURVED] = '1';
-*/
         /** 
          * ##################################################
          * ############## UNDO / REDO Manager ###############
