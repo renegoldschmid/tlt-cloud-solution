@@ -14,6 +14,7 @@
 
 	<!-- Loads and initializes mxGraph library -->
 	<script type="text/javascript" src="javascript/src/js/mxClient.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/canvg/3.0.7/umd.js"></script>
 
 	<!-- App Code -->
 	<script type="text/javascript" src="javascript/app.js"></script>
@@ -21,6 +22,7 @@
 
 <!-- Page passes the container for the graph to the program -->
 <body onload="main(document.getElementById('graphContainer'))">
+	<div id="canvasOutput"></div>
 	<!-- Container for the toolbar containing interactables for the user, e.g. undo and redo buttons -->
 	<div id="toolbarContainer" class="bg-light border-bottom">
 		<svg width="2em" height="2em" viewBox="0 0 16 16" id="logo" class="bi bi-emoji-smile" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -52,6 +54,10 @@
 				<path fill-rule="evenodd" d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
 				<path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
 			  </svg>
+		</button>
+		<!-- Export as PNG Button -->
+		<button class="button" type="button" id="export-png">
+			Export as PNG
 		</button>
 	</div>
 	<!-- Container for the sidebar containing the dragable elements -->

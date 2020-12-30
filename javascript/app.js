@@ -328,6 +328,15 @@ function main(container) {
         }, false);
 
         /**
+         * ############ Export (PNG) Functionality ###########
+         */
+
+        // Event Handler: Export as PNG-File
+        document.getElementById("export-png").addEventListener("click", function(){
+            exportAsPNG("export.png");
+        }, false);
+
+        /**
          * ################# Diagram Title ##################
          */
         var diagramTitleContainer = document.getElementById("titleContainer");
@@ -373,21 +382,57 @@ function main(container) {
      */
 
     /**
+     * Creates a clickable element that downloads the given data to the local filesystem
+     * @param {*} filename
+     * @param {*} data
+     */
+    function createLink(filename, data) {
+        let link = document.createElement('a');
+        link.download = filename;
+        link.href = data;
+        return link;
+    }
+
+    /**
      * Downloads a XML File of the current state to the user's storage
      * @param {*} filename 
      */
     function saveDiagram(filename) {
-        var xml = getDiagramAsXml(false);
-        var element = document.createElement('a');
-        element.setAttribute('href', 'data:text/xml;charset=utf-8,' + encodeURIComponent(xml));
-        element.setAttribute('download', filename);
+        let xml = getDiagramAsXml(false);
+        let data = 'data:text/xml;charset=utf-8,' + encodeURIComponent(xml);
+        createLink(filename, data).click();
+    }
 
-        element.style.display = 'none';
-        document.body.appendChild(element);
+    /**
+     * todo
+     * @param {*} filename 
+     */
+    async function exportAsPNG(filename) {
+        const svg = document.getElementById('graphContainer').firstChild;
+        const svgText = document.getElementById('graphContainer').innerHTML;
 
-        element.click();
+        // Get Size of the image
+        let style = getComputedStyle(svg);
+        let width = style.minWidth;
+        let height = style.minHeight;
 
-        document.body.removeChild(element);
+        const canvas = document.createElement('canvas');
+		const ctx = canvas.getContext('2d');
+        canvas.setAttribute('width', width);
+        canvas.setAttribute('height', height);
+
+		const v = await canvg.Canvg.from(ctx, svgText);
+
+        //let canvasOutput = document.getElementById('canvasOutput');
+        //canvasOutput.innerHTML = '';
+        //canvasOutput.appendChild(canvas);
+        
+        // Start SVG rendering with animations and mouse handling.
+        // await v.start();
+        await v.render();
+
+        var base64 = canvas.toDataURL("image/png");
+        createLink(filename, base64).click();
     }
 
     /**
