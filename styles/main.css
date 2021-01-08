@@ -1,20 +1,22 @@
 html, body {
     margin: 0;
     padding: 0;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 #toolbarContainer {
+    display: flex;
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 73px;
+    height: 45px;
     padding-left: 10px;
 }
 
 #sidebarContainer {
     position: absolute;
-    top: 73px;
+    top: 45px;
     left: 0;
     bottom: 0;
     width: 160px;
@@ -31,7 +33,7 @@ img.mxToolbarMode {
 
 #graphContainer {
     position: absolute;
-    top: 73px;
+    top: 45px;
     left: 160px;
     right: 260px;
     bottom: 57px;
@@ -41,7 +43,7 @@ img.mxToolbarMode {
 
 #inspectorContainer {
     position: absolute;
-    top: 73px;
+    top: 45px;
     right: 0;
     bottom: 0;
     width: 260px;
@@ -61,13 +63,14 @@ footer {
 }
 
 .button {
+    display: inline-flex;
+    margin: 0;
     padding: 12px 20px;
-    margin: 15px 5px;
     border: none;
-    box-shadow: 0px 0px 6px -2px rgba(0,0,0,0.5);
-    background: #d7d9db; /*516efc*/
+    border-right: 1px solid #dee2e6;
+    background: #f8f9fa;
     text-decoration: none;
-    color: black; /*white*/
+    color: black;
     font-size: 13px;
     text-transform: uppercase;
     transition: background-color .3s ease;
@@ -75,7 +78,7 @@ footer {
 
 .button:hover,
 #saveUpload:hover {
-    background: #b7c8ec; /*3348ad*/
+    background: #dee2e6;
     cursor: pointer;
 }
 
@@ -90,7 +93,6 @@ footer {
 #saveUpload:hover,
 #saveUpload:active,
 #saveUpload:focus {
-    border: none;
     outline: none;
 }
 
@@ -98,7 +100,42 @@ input[type="file"] {
     display: none;
 }
 
+.button-grid {
+    border-left: 1px solid #dee2e6;
+}
+
 #titleContainer {
-    display: inline-block;
-    padding: 0px 10px;
+    display: flex;
+    align-items: center;
+    padding: 0px 5px;
+}
+
+#diagramTitle {
+    padding: 0 4px 0 8px;
+}
+
+.fa-edit {
+    padding-left: 2px;
+}
+
+.fa-edit-d-none {
+    color: #f8f9fa;
+}
+
+.fa-undo, 
+.fa-redo,
+.fa-cloud-upload-alt {
+    padding: 3px 0px 0px 8px;
+    font-size: 1.1em;
+}
+
+.fa-border-none,
+.fa-save,
+.fa-image {
+    padding: 2px 0px 0px 8px;
+    font-size: 1.3em;
+}
+
+.fa-file {
+    padding-top: 0px;
 }

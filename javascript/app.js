@@ -1,5 +1,6 @@
 // Version Number
-var version = "v0.4.0";
+var version = "v1.0"; // Current version
+var date = new Date(); // Get current date
 
 /** 
  * ##################################################
@@ -20,7 +21,7 @@ function setDiagramTitle(title) {
 }
 
 function setFooterText() {
-    var text = "© 2020, TLT Cloud Solution (" + version + ") by René Goldschmid."
+    var text = "© 2020-" + date.getFullYear() + ", TLT Cloud Solution by René Goldschmid. Current Release: " + version;
     document.getElementById("footerText").innerHTML = text;
 }
 
@@ -253,11 +254,13 @@ function main(container) {
             undoManager.undo();
         });
         undoButton.classList.add("button", "button-undo");
+        undoButton.innerHTML = undoButton.innerHTML + "<i class=\"fas fa-undo\"></i>";
 
         var redoButton = mxUtils.button('Redo', function() {
             undoManager.redo();
         });
         redoButton.classList.add("button", "button-redo");
+        redoButton.innerHTML = redoButton.innerHTML + "<i class=\"fas fa-redo\"></i>";
 
         // Add Undo/Redo-Buttons to the Toolbar
         var toolbar = document.getElementById('toolbarContainer');
@@ -345,8 +348,8 @@ function main(container) {
 
         // Event Handler: Clicking the title
         diagramTitle.onfocus = function() {
-            if (editDiagramTitleIcon.classList.contains("d-none")) {
-                editDiagramTitleIcon.classList.toggle("d-none");
+            if (editDiagramTitleIcon.classList.contains("fa-edit-d-none")) {
+                editDiagramTitleIcon.classList.toggle("fa-edit-d-none");
             }
         }
 
@@ -357,17 +360,17 @@ function main(container) {
                                            .replace(/</g, "&lt;")
                                            .replace(/>/g, "&gt;");
             
-            if (!editDiagramTitleIcon.classList.contains("d-none")) {
-                editDiagramTitleIcon.classList.toggle("d-none");
+            if (!editDiagramTitleIcon.classList.contains("fa-edit-d-none")) {
+                editDiagramTitleIcon.classList.toggle("fa-edit-d-none");
             }
         };
 
         // Event Handler: Hovering the diagram title
         diagramTitleContainer.onmouseover = function() {
-            editDiagramTitleIcon.classList.toggle("d-none");
+            editDiagramTitleIcon.classList.toggle("fa-edit-d-none");
         }
         diagramTitleContainer.onmouseout = function() {
-            editDiagramTitleIcon.classList.toggle("d-none");
+            editDiagramTitleIcon.classList.toggle("fa-edit-d-none");
         }
 
         /**
