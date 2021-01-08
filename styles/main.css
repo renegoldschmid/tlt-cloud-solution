@@ -35,7 +35,7 @@ img.mxToolbarMode {
     position: absolute;
     top: 45px;
     left: 160px;
-    right: 260px;
+    right: 300px;
     bottom: 57px;
     overflow: auto;
     cursor: default;
@@ -46,7 +46,7 @@ img.mxToolbarMode {
     top: 45px;
     right: 0;
     bottom: 0;
-    width: 260px;
+    width: 300px;
     padding: 10px;
     overflow: hidden;
 }
@@ -56,6 +56,14 @@ footer {
     bottom: 0;
     width: 100%;
     text-align: center;
+}
+
+a {
+    color: black;
+}
+
+a:visited {
+    color: black;
 }
 
 .grid {
@@ -138,4 +146,9 @@ input[type="file"] {
 
 .fa-file {
     padding-top: 0px;
+}
+
+.fa-envelope {
+    padding-left: 2px;
+    font-size: 1.1em;
 }

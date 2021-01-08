@@ -1,6 +1,7 @@
 // Version Number
 var version = "v1.0"; // Current version
 var date = new Date(); // Get current date
+var email = "renegoldschmid@gmail.com";
 
 /** 
  * ##################################################
@@ -20,8 +21,13 @@ function setDiagramTitle(title) {
     document.getElementById("diagramTitle").innerHTML = title;
 }
 
+function setVersionInfo() {
+    var text = "Current Release: " + version;
+    document.getElementById("versionInfo").innerHTML = text;
+}
+
 function setFooterText() {
-    var text = "© 2020-" + date.getFullYear() + ", TLT Cloud Solution by René Goldschmid. Current Release: " + version;
+    var text = "© 2020-" + date.getFullYear() + ", TLT Cloud Solution by René Goldschmid <a href=\"mailto:" + email + "\"><i class=\"far fa-envelope\"></i></a>";
     document.getElementById("footerText").innerHTML = text;
 }
 
@@ -32,7 +38,9 @@ function setFooterText() {
  */
 // App starts here. This function is invoked from the onLoad event handler of the document.
 function main(container) {
-    // Set Footertext with current Version
+    // Set current version
+    setVersionInfo()
+    // Set Footertext
     setFooterText();
     // Checks if the browser is supported
     if (!mxClient.isBrowserSupported()) {
