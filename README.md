@@ -6,12 +6,11 @@ Master Project by René Goldschmid
 
 ## Publishing
 
-The latest stable version (currently v0.4) is published at [tlt-cloud-solution.netlify.app](https://tlt-cloud-solution.netlify.app)
+The latest stable version (currently v1.0) is published at [tlt-cloud-solution.netlify.app](https://tlt-cloud-solution.netlify.app)
 
-## Lookout for v0.5
+## Lookout for v1.1
 
-Version 0.5 will include the following features:
+Version 1.1 will include the following features:
 
-- Image Export
 - Inspector Menu
-- New UI for the Menu Bar
+- Custom Perimeters for each entity-type
