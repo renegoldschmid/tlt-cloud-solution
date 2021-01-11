@@ -8,9 +8,16 @@ Master Project by René Goldschmid
 
 The latest stable version (currently v1.0) is published at [tlt-cloud-solution.netlify.app](https://tlt-cloud-solution.netlify.app)
 
-## Lookout for v1.1
+## Local Development
 
-Version 1.1 will include the following features:
+The app can be run locally, using a modern Webbrowser with JavaScript enabled. Hosting the app on a local server can reduce problems with the CORS Policy, so it is recommended for local development.
 
-- Inspector Menu
+## Planned features for future updates
+
+The following features may be added in the future:
+
+- Inspector menu for editing entities
 - Custom Perimeters for each entity-type
+- Updated Icons for the entity-toolbar
+- Export in additional formats
+- UI improvements
