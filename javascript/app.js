@@ -27,7 +27,7 @@ function setVersionInfo() {
 }
 
 function setFooterText() {
-    var text = "© 2020-" + date.getFullYear() + ", LTP Designer by René Goldschmid <a href=\"mailto:" + email + "\"><i class=\"far fa-envelope\"></i></a>";
+    var text = "Copyright 2020-" + date.getFullYear() + ", LTP Designer by Rene Goldschmid <a href=\"mailto:" + email + "\"><i class=\"far fa-envelope\"></i></a>";
     document.getElementById("footerText").innerHTML = text;
 }
 
