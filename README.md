@@ -1,4 +1,4 @@
-# The Logical Thinking - Cloud Solution
+# LTP Designer
 
 Master Project by René Goldschmid
 
@@ -6,7 +6,7 @@ Master Project by René Goldschmid
 
 ## Publishing
 
-The latest stable version (currently v1.0) is published at [tlt-cloud-solution.netlify.app](https://tlt-cloud-solution.netlify.app)
+The latest stable version (currently v1.0) is published at [ltp-designer.netlify.app](https://ltp-designer.netlify.app/)
 
 ## Local Development
 
